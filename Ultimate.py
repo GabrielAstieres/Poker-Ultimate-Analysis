@@ -27,18 +27,17 @@ def getCard(deck, nb):
 # Creates a board, a hand for the dealer, a hand for the player
 def setRound():
     deck = createDeck()
-    board = getCard(deck, 5)
+    flop = getCard(deck, 3)
+    river = getCard(deck, 2)
     player = getCard(deck, 2)
     dealer = getCard(deck, 2)
-    return(board, dealer, player)
+    return(flop, river, dealer, player)
     
 
 def main():
-    board, dealer, player = setRound()
-    print(board)
-    print(dealer)
-    print(player)
-
+    flop, river, dealer, player = setRound()
+    print(HandReader.isThreeOfAkind([('S', 14), ('H', 11), ('H', 11), ('D', 10), ('S', 9), ('C', 11), ('S', 8)]))
+    print('')
 
 
 if __name__ == "__main__":

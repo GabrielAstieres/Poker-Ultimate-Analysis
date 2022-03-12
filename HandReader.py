@@ -38,3 +38,51 @@ def isStraight(cards):
         if(len(flush)): return flush, True 
         return uniqueValues[-5:], False
     return []
+
+
+# Find if there is a four of a kind.
+# Param Expects array of cards.
+# Returns The value of the four of a kind and the additional high card.
+def isFourOfAkind(cards):
+    cards.sort(key=lambda cards: cards[1])
+    cards = [card[1] for card in cards]
+    values = set(cards)
+    fourOfAkind = 0
+
+    for value in values:
+        if(cards.count(value)>3):
+            fourOfAkind = value
+            break
+
+    if(fourOfAkind):
+        values.remove(fourOfAkind)
+        highCard = max(values)
+        return fourOfAkind, highCard
+    
+    return 0
+
+
+# Find if there is a three of a kind.
+# Param Expects array of cards.
+# Returns The value of the three of a kind and the additionals two high cards.
+def isThreeOfAkind(cards):
+    cards.sort(key=lambda cards: cards[1])
+    cards = [card[1] for card in cards]
+    values = set(cards)
+    threeOfAkind = 0
+
+    for value in values:
+        if(cards.count(value)>2):
+            threeOfAkind = value
+            break
+
+    if(threeOfAkind):
+        values.remove(threeOfAkind)
+        firstHighCard = max(values)
+
+        values.remove(firstHighCard)
+        secondHighCard = max(values)
+        return threeOfAkind, firstHighCard, secondHighCard
+
+    return 0
+
