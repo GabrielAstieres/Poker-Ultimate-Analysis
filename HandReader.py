@@ -1,7 +1,7 @@
 # Find a straight flush in the cards.
 # Param Expects array of cards.
 # Returns 0 if there is no Straight flush.
-# Returns The cards forming the highest flush otherwise.
+# Returns The sum of the values of the card making the straight flush.
 def isStraightFlush(cards):
     hearts = [number for (color,number) in cards if color == 'H']
     clubs = [number for (color,number) in cards if color == 'C']
@@ -22,13 +22,13 @@ def isStraightFlush(cards):
             else: break
 
     if(len(followingCards)<5):return 0
-    return followingCards[-5:]
+    return sum(followingCards[-5:])
     
 
 # Find a flush in the cards, doesn't consider straight flush.
 # Param Expects array of cards.
 # Returns 0 if there is no flush.
-# Returns The cards forming the highest flush otherwise.
+# Returns The sum of the values of the card making the flush.
 def isFlush(cards):
     cards.sort(key=lambda cards: cards[1])
     hearts = [number for (color,number) in cards if color == 'H']
@@ -39,13 +39,13 @@ def isFlush(cards):
     
     if(len(color)<5):return 0
     
-    return color[-5:]
+    return sum(color[-5:])
 
 
 # Find the strongest straight in the cards, if any.
 # Param Expects array of cards.
 # Returns 0 if there is no straight.
-# Returns The cards of the straight, boolean indicating straight Flush.
+# Returns The sum of the values of the card making the straight.
 def isStraight(cards):
     cards = [card[1] for card in cards]
     cards = sorted(set(cards))
@@ -61,7 +61,7 @@ def isStraight(cards):
     
     if(len(followingCards)<5):return 0
     
-    return followingCards[-5:]
+    return sum(followingCards[-5:])
 
 
 
@@ -88,7 +88,7 @@ def isFourOfAkind(cards):
 
 # Find if there is a three of a kind.
 # Param Expects array of cards.
-# Returns The value of the three of a kind and the additionals two high cards.
+# Returns The value of the three of a kind and the sum of the two high cards.
 def isThreeOfAkind(cards):
     cards = [card[1] for card in cards]
     values = sorted(set(cards), reverse=1)
@@ -105,7 +105,7 @@ def isThreeOfAkind(cards):
 
         values.remove(firstHighCard)
         secondHighCard = max(values)
-        return threeOfAkind, firstHighCard, secondHighCard
+        return threeOfAkind, firstHighCard + secondHighCard
 
     return 0
 
@@ -142,8 +142,7 @@ def isDoublePair(cards):
     
 # Find if there is a there is a pair.
 # Param Expects array of cards.
-# Returns The value of the pair and then
-# the three next high cards
+# Returns The value of the pair and the sum of the three high cards.
 # 0 if no pair
 def isPair(cards):
     cards.sort(key=lambda cards: cards[1])
@@ -158,7 +157,7 @@ def isPair(cards):
 
     if(pair):
         values.remove(pair)
-        return pair, values[0:3]
+        return pair, sum(values[0:3])
     return 0
 
 # Find if there is a Full House.

@@ -75,12 +75,19 @@ def printProba(nbOfHands):
     print("High card", nbOfHands * 0.174)
 
 
-    
-
 
 def main():
-    printStats(10000)
-
+    P = D = 0
+    for i in range(10000):
+        flop, river, dealer, player = setRound()
+        w = HandComparator.getWinner(flop, river, dealer, player )
+        if(w[0] == 1):
+            P += 1
+        if(w[0] == 2):
+            D += 1
+        if(i%1000 == 0): print(str(i/1000) + "%")
+    print(P,D)
+            
 
 if __name__ == "__main__":
     main()
