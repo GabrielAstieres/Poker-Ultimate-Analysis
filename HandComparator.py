@@ -53,64 +53,16 @@ def getWinner(flop, river, dealer, player):
 
     if(playerHand[0] > dealerHand[0]): return 1, playerHand[0]
     if(dealerHand[0] > playerHand[0]): return 2, playerHand[0]
+    return compareHand(playerHand[1], dealerHand[1]), playerHand[0]
 
-    if(dealerHand[0] == playerHand[0]):
-        if(playerHand[0] == 10): return 0, 10
 
-        if(playerHand[0] == 9): 
-            if(dealerHand[1] > playerHand[1]): return 2, 9
-            if(playerHand[1] > dealerHand[1]): return 1, 9
-            return 0, 9
+# Compare two hands that have the same combination.
+# Returns 1 if the player won, 2 if the dealer won, 0 if tide.
+def compareHand(handPlayer, handDealer):
+    while(handPlayer):
+        playerScore = handPlayer.pop(0)
+        dealerScore = handDealer.pop(0)
         
-        if(playerHand[0] == 8): 
-            if(dealerHand[1][0] > playerHand[1][0]): return 2, 8
-            if(playerHand[1][0] > dealerHand[1][0]): return 1, 8
-            if(dealerHand[1][1] > playerHand[1][1]): return 2, 8
-            if(playerHand[1][1] > dealerHand[1][1]): return 1, 8
-            return 0,8
-
-        if(playerHand[0] == 7): 
-            if(dealerHand[1][0] > playerHand[1][0]): return 2, 7
-            if(playerHand[1][0] > dealerHand[1][0]): return 1, 7
-            if(dealerHand[1][1] > playerHand[1][1]): return 2, 7
-            if(playerHand[1][1] > dealerHand[1][1]): return 1, 7
-            return 0,7
-
-        if(playerHand[0] == 6): 
-            if(dealerHand[1] > playerHand[1]): return 2, 6
-            if(playerHand[1] > dealerHand[1]): return 1, 6
-            return 0,6
-
-        if(playerHand[0] == 5): 
-            if(dealerHand[1] > playerHand[1]): return 2, 5
-            if(playerHand[1] > dealerHand[1]): return 1, 5
-            return 0,5
-
-        if(playerHand[0] == 4): 
-            if(dealerHand[1][0] > playerHand[1][0]): return 2, 4
-            if(playerHand[1][0] > dealerHand[1][0]): return 1, 4
-            if(dealerHand[1][1] > playerHand[1][1]): return 2, 4
-            if(playerHand[1][1] > dealerHand[1][1]): return 1, 4
-            return 0,4
-
-        if(playerHand[0] == 3): 
-            if(dealerHand[1][0] > playerHand[1][0]): return 2, 3
-            if(playerHand[1][0] > dealerHand[1][0]): return 1, 3
-            if(dealerHand[1][1] > playerHand[1][1]): return 2, 3
-            if(playerHand[1][1] > dealerHand[1][1]): return 1, 3
-            if(dealerHand[1][2] > playerHand[1][2]): return 2, 3
-            if(playerHand[1][2] > dealerHand[1][2]): return 1, 3
-            return 0,3
-            
-
-        if(playerHand[0] == 2): 
-            if(dealerHand[1][0] > playerHand[1][0]): return 2, 2
-            if(playerHand[1][0] > dealerHand[1][0]): return 1, 2
-            if(dealerHand[1][1] > playerHand[1][1]): return 2, 2
-            if(playerHand[1][1] > dealerHand[1][1]): return 1, 2
-            return 0,2
-
-        if(playerHand[0] == 1): 
-            if(dealerHand[1] > playerHand[1]): return 2, 1
-            if(playerHand[1] > dealerHand[1]): return 1, 1
-            return 0,1
+        if(playerScore > dealerScore): return 1
+        if(dealerScore > playerScore): return 2
+    return 0

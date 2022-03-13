@@ -22,7 +22,7 @@ def isStraightFlush(cards):
             else: break
 
     if(len(followingCards)<5):return 0
-    return sum(followingCards[-5:])
+    return [sum(followingCards[-5:])]
     
 
 # Find a flush in the cards, doesn't consider straight flush.
@@ -39,7 +39,7 @@ def isFlush(cards):
     
     if(len(color)<5):return 0
     
-    return sum(color[-5:])
+    return [sum(color[-5:])]
 
 
 # Find the strongest straight in the cards, if any.
@@ -61,7 +61,7 @@ def isStraight(cards):
     
     if(len(followingCards)<5):return 0
     
-    return sum(followingCards[-5:])
+    return [sum(followingCards[-5:])]
 
 
 
@@ -81,7 +81,7 @@ def isFourOfAkind(cards):
     if(fourOfAkind):
         values.remove(fourOfAkind)
         highCard = max(values)
-        return fourOfAkind, highCard
+        return [fourOfAkind, highCard]
     
     return 0
 
@@ -105,7 +105,7 @@ def isThreeOfAkind(cards):
 
         values.remove(firstHighCard)
         secondHighCard = max(values)
-        return threeOfAkind, firstHighCard + secondHighCard
+        return [threeOfAkind, firstHighCard + secondHighCard]
 
     return 0
 
@@ -135,7 +135,7 @@ def isDoublePair(cards):
 
     if(secondPair != 0):
         values.remove(secondPair)
-        return pair, secondPair, max(values)
+        return [pair, secondPair, max(values)]
     
     return 0 
     
@@ -157,7 +157,7 @@ def isPair(cards):
 
     if(pair):
         values.remove(pair)
-        return pair, sum(values[0:3])
+        return [pair, sum(values[0:3])]
     return 0
 
 # Find if there is a Full House.
@@ -179,11 +179,11 @@ def isFullHouse(cards):
 
     if(pair == 0): return 0
 
-    return threeOfAkind[0], pair
+    return [threeOfAkind[0], pair]
 
 # Returns the value of the five high cards of a hand.
 def getHighCardsValues(cards):
     cards.sort(key=lambda cards: cards[1])
     cards = [card[1] for card in cards]
     values = sorted(cards, reverse=1)[0:5]
-    return(sum(values))
+    return [sum(values)]
