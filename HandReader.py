@@ -1,56 +1,80 @@
+# Find a straight flush in the cards.
+# Param Expects array of cards.
+# Returns 0 if there is no Straight flush.
+# Returns The cards forming the highest flush otherwise.
+def isStraightFlush(cards):
+    hearts = [number for (color,number) in cards if color == 'H']
+    clubs = [number for (color,number) in cards if color == 'C']
+    diamonds = [number for (color,number) in cards if color == 'D']
+    spades = [number for (color,number) in cards if color == 'S']
+    color = max([hearts, clubs, diamonds, spades], key = lambda i: len(i))
+
+    if(len(color)<5):return 0
+
+    color = sorted(set(color))
+    followingCards = [color.pop(0)]
+    while(color):
+        next = color.pop(0)
+        if(followingCards[-1] == next -1): followingCards += [next]
+        else: 
+            if(len(followingCards)<5):
+                followingCards = [next]
+            else: break
+
+    if(len(followingCards)<5):return 0
+    return followingCards[-5:]
+    
 
 # Find a flush in the cards, doesn't consider straight flush.
 # Param Expects array of cards.
-# Returns Empty list if there is no flush.
+# Returns 0 if there is no flush.
 # Returns The cards forming the highest flush otherwise.
 def isFlush(cards):
-    colors = [[],[],[],[]]
-    for card in cards:
-        if(card[0] == 'H'):colors[0]+=[card]
-        if(card[0] == 'C'):colors[1]+=[card]
-        if(card[0] == 'S'):colors[2]+=[card]
-        if(card[0] == 'D'):colors[3]+=[card]
-        
-    if(len(colors[0])>4): return sorted(colors[0])[-5:]
-    if(len(colors[1])>4): return sorted(colors[1])[-5:]
-    if(len(colors[2])>4): return sorted(colors[2])[-5:]
-    if(len(colors[3])>4): return sorted(colors[3])[-5:]
-    return []
+    cards.sort(key=lambda cards: cards[1])
+    hearts = [number for (color,number) in cards if color == 'H']
+    clubs = [number for (color,number) in cards if color == 'C']
+    diamonds = [number for (color,number) in cards if color == 'D']
+    spades = [number for (color,number) in cards if color == 'S']
+    color = max([hearts, clubs, diamonds, spades], key = lambda i: len(i))
+    
+    if(len(color)<5):return 0
+    
+    return color[-5:]
 
 
 # Find the strongest straight in the cards, if any.
 # Param Expects array of cards.
-# Returns Empty list if there is no straight.
+# Returns 0 if there is no straight.
 # Returns The cards of the straight, boolean indicating straight Flush.
 def isStraight(cards):
-    cards.sort(key=lambda cards: cards[1])
-    followingValues = [cards[0]]
-    for i in range(1,len(cards)):
-        if(cards[i][1] == cards[i-1][1]+1 or cards[i][1] == cards[i-1][1]):
-            followingValues += [cards[i]]
-        else:
-            if(len(followingValues) < 5):followingValues = [cards[i]]
-    seen = set()
-    uniqueValues =  [(a, b) for a, b in followingValues 
-         if not (b in seen or seen.add(b))]
-    if(len(uniqueValues)>4): 
-        flush = isFlush(followingValues)
-        if(len(flush)): return flush, True 
-        return uniqueValues[-5:], False
-    return []
+    cards = [card[1] for card in cards]
+    cards = sorted(set(cards))
+
+    followingCards = [cards.pop(0)]
+    while(cards):
+        next = cards.pop(0)
+        if(followingCards[-1] == next -1): followingCards += [next]
+        else: 
+            if(len(followingCards)<5):
+                followingCards = [next]
+            else: break
+    
+    if(len(followingCards)<5):return 0
+    
+    return followingCards[-5:]
+
 
 
 # Find if there is a four of a kind.
 # Param Expects array of cards.
 # Returns The value of the four of a kind and the additional high card.
 def isFourOfAkind(cards):
-    cards.sort(key=lambda cards: cards[1])
     cards = [card[1] for card in cards]
     values = set(cards)
     fourOfAkind = 0
 
     for value in values:
-        if(cards.count(value)>3):
+        if(cards.count(value) == 4):
             fourOfAkind = value
             break
 
@@ -66,13 +90,12 @@ def isFourOfAkind(cards):
 # Param Expects array of cards.
 # Returns The value of the three of a kind and the additionals two high cards.
 def isThreeOfAkind(cards):
-    cards.sort(key=lambda cards: cards[1])
     cards = [card[1] for card in cards]
-    values = set(cards)
+    values = sorted(set(cards), reverse=1)
     threeOfAkind = 0
 
     for value in values:
-        if(cards.count(value)>2):
+        if(cards.count(value) == 3):
             threeOfAkind = value
             break
 
@@ -86,3 +109,82 @@ def isThreeOfAkind(cards):
 
     return 0
 
+
+# Find if there is a double pair.
+# Param Expects array of cards.
+# Returns The values of the double pair and then the high card
+# 0 if no double pair
+def isDoublePair(cards):
+    cards = [card[1] for card in cards]
+    values = sorted(set(cards), reverse=1)
+
+    pair = 0
+    for value in values:
+        if(cards.count(value) == 2):
+            pair = value
+            break
+    
+    if(pair == 0): return 0
+    values.remove(pair)
+
+    secondPair = 0
+    for value in values:
+        if(cards.count(value) == 2):
+            secondPair = value
+            break
+
+    if(secondPair != 0):
+        values.remove(secondPair)
+        return pair, secondPair, max(values)
+    
+    return 0 
+    
+    
+# Find if there is a there is a pair.
+# Param Expects array of cards.
+# Returns The value of the pair and then
+# the three next high cards
+# 0 if no pair
+def isPair(cards):
+    cards.sort(key=lambda cards: cards[1])
+    cards = [card[1] for card in cards]
+    values = sorted(set(cards), reverse=1)
+
+    pair = 0
+    for value in values:
+        if(cards.count(value) > 1):
+            pair = value
+            break
+
+    if(pair):
+        values.remove(pair)
+        return pair, values[0:3]
+    return 0
+
+# Find if there is a Full House.
+# Param Expects array of cards.
+# Returns The value of the three of a kind and the value of the pair.
+def isFullHouse(cards):
+    threeOfAkind = isThreeOfAkind(cards)
+    if(threeOfAkind == 0): return 0
+
+    cards = [card[1] for card in cards]
+    values = sorted(set(cards), reverse=1)
+    values.remove(threeOfAkind[0])
+
+    pair = 0
+    for value in values:
+        if(cards.count(value) > 1):
+            pair = value
+            break
+
+    if(pair == 0): return 0
+
+    return threeOfAkind[0], pair
+
+# Returns the value of the five high cards of a hand.
+def getHighCardsValues(cards):
+    cards.sort(key=lambda cards: cards[1])
+    cards = [card[1] for card in cards]
+    values = sorted(cards, reverse=1)[0:5]
+    return(sum(values))
