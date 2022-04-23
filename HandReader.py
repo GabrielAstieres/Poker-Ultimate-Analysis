@@ -1,4 +1,4 @@
-# Find a straight flush in the cards.
+# Find if there is a straight flush in the cards.
 # Param Expects array of cards.
 # Returns 0 if there is no Straight flush.
 # Returns The sum of the values of the card making the straight flush.
@@ -25,7 +25,7 @@ def isStraightFlush(cards):
     return [sum(followingCards[-5:])]
     
 
-# Find a flush in the cards, doesn't consider straight flush.
+# Find if there is a flush in the cards, doesn't consider straight flush.
 # Param Expects array of cards.
 # Returns 0 if there is no flush.
 # Returns The sum of the values of the card making the flush.
@@ -100,6 +100,8 @@ def isThreeOfAkind(cards):
             break
 
     if(threeOfAkind):
+        if(len(cards) == 3): return [threeOfAkind]
+
         values.remove(threeOfAkind)
         firstHighCard = max(values)
 
@@ -164,12 +166,18 @@ def isPair(cards):
 # Param Expects array of cards.
 # Returns The value of the three of a kind and the value of the pair.
 def isFullHouse(cards):
-    threeOfAkind = isThreeOfAkind(cards)
-    if(threeOfAkind == 0): return 0
-
     cards = [card[1] for card in cards]
     values = sorted(set(cards), reverse=1)
-    values.remove(threeOfAkind[0])
+    threeOfAkind = 0
+
+    for value in values:
+        if(cards.count(value) == 3):
+            threeOfAkind = value
+            break
+
+    if(threeOfAkind == 0): return 0
+
+    values.remove(threeOfAkind)
 
     pair = 0
     for value in values:
@@ -179,9 +187,11 @@ def isFullHouse(cards):
 
     if(pair == 0): return 0
 
-    return [threeOfAkind[0], pair]
+    return [threeOfAkind, pair]
 
-# Returns the value of the five high cards of a hand.
+# Find The strength of the highest cards.
+# Param Expects array of cards.
+# Returns The value of the five high cards of a hand.
 def getHighCardsValues(cards):
     cards.sort(key=lambda cards: cards[1])
     cards = [card[1] for card in cards]
